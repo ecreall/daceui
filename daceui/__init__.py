@@ -26,3 +26,19 @@ def main(global_config, **settings):
     config.add_static_view(
     	 'daceuistatic', 'daceui:static', cache_max_age=YEAR)
     return config.make_wsgi_app()
+
+
+def include(config): # pragma: no cover
+    config.include('.')
+
+
+def scan(config): # pragma: no cover
+    config.scan('.')
+    
+
+def includeme(config): # pragma: no cover
+    config.include(include)
+    config.include(scan)
+    YEAR = 86400 * 365
+    config.add_static_view(
+         'daceuistatic', 'daceui:static', cache_max_age=YEAR)
