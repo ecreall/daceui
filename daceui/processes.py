@@ -30,8 +30,6 @@ from dace.objectofcollaboration.services.processdef_container import (
 from pontus.core import VisualisableElement
 
 
-
-
 def relation_validationA(process, context):
     return True
 
