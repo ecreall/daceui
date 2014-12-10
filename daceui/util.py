@@ -60,7 +60,8 @@ class DaceUIAPI(object):
                     request,
                     process_or_id=None,
                     action_id=None, 
-                    process_discriminator=None):
+                    process_discriminator=None,
+                    isautomatic=False):
         all_actions = []
         process_id = None
         process = None
@@ -70,8 +71,10 @@ class DaceUIAPI(object):
             process = process_or_id
 
         for context in contexts:
-            actions = getAllBusinessAction(context, request,
-                         process_id=process_id, node_id=action_id,
+            actions = getAllBusinessAction(context, request, 
+                         isautomatic=isautomatic,
+                         process_id=process_id, 
+                         node_id=action_id,
                          process_discriminator=process_discriminator)
             if process:
                 actions = [action for action in actions \
