@@ -210,9 +210,19 @@ class DaceUIAPI(object):
             request.POST.clear()
             old_resources = resources
             old_allbodies_actions = allbodies_actions
+            actions_toreplay = []
+            for context, action in list(all_actions):
+                try:
+                    action.validate(context, request)
+                    if context.__parent__:
+                        actions_toreplay.append((context, action))
+
+                except Exception as e:
+                    pass
+
             action_updated, messages, \
             resources, allbodies_actions = self.update_actions(request, 
-                                                         all_actions,
+                                                         actions_toreplay,
                                                          ignor_form)
             if old_resources is not None:
                 resources = merge_dicts(old_resources, resources, 
@@ -477,3 +487,4 @@ class DaceUIAPIJson(BasicView):
                 return operation()
 
         return {}#message erreur
+
