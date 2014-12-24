@@ -410,6 +410,7 @@ def defaultusers(node, kw):
     context = node.bindings['context']
     return  context.assigned_to
 
+
 @colander.deferred
 def listchoice(node, kw):
     values = []

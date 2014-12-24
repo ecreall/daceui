@@ -343,7 +343,7 @@ class AssignToUsers(InfiniteCardinality):
     def start(self, context, request, appstruct, **kw):
         users = list(appstruct.pop('users'))
         context.set_assignment(users)
-        return True
+        return {}
 
 class AssignActionToUsers(InfiniteCardinality):
 
@@ -356,7 +356,7 @@ class AssignActionToUsers(InfiniteCardinality):
     def start(self, context, request, appstruct, **kw):
         users = list(appstruct.pop('users'))
         context.set_assignment(users)
-        return True
+        return {}
 
 
 @process_definition(name='activity_pd', id='activity_pd')
