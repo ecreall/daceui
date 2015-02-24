@@ -14,6 +14,9 @@ function update_action(url){
                  var action_body = data['body'];
                  if (action_body){
                      var content = $($(action_body).find('.panel-body').first());
+                     if (content.length == 0){
+                      content = $(action_body)
+                     };
                      $($(target).find('.modal-body')).html(content.html());
                      $(target).modal('show');
                      try {
