@@ -398,7 +398,8 @@ class DaceUIAPI(object):
             if add_action_discriminator:
                 action_oid = get_oid(action)
                 view_instance.viewid += str(action_oid)
- 
+
+            view_instance.wrapper_template = 'daceui:templates/simple_view_wrapper.pt'
             view_result = view_instance()
             body = ''
             if isinstance(view_result, dict) and 'coordinates' in view_result:

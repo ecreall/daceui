@@ -13,13 +13,7 @@ function update_action(url){
               $.getJSON(url,{tomerge:'True', coordinates:'main'}, function(data) {
                  var action_body = data['body'];
                  if (action_body){
-                     var content = $($(action_body).find('.panel-body').first());
-                     if (content.length == 0){
-                      content = $(action_body)
-                      $($(target).find('.modal-body')).html(action_body);
-                     }else{
-                         $($(target).find('.modal-body')).html(content.html())
-                     };
+                     $($(target).find('.modal-body')).html(action_body);
                      $(target).modal('show');
                      try {
                           deform.processCallbacks();
