@@ -253,6 +253,11 @@ class DaceUIAPI(object):
 
     def action_infomrations(self, action, context, request=None, **args):
         action_id = action.behavior_id
+        view_title = action.title
+        view = DEFAULTMAPPING_ACTIONS_VIEWS.get(action._class_, None)
+        if view:
+            view_title = getattr(view, 'title', view_title)
+
         action_oid = 'start'
         context_oid = get_oid(context)
         try:
@@ -284,7 +289,9 @@ class DaceUIAPI(object):
         informations.update({'action':action,
                              'action_id':action_id,
                              'actionurl_update': actionurl_update,
-                             'actionurl_after':after_url})
+                             'actionurl_after':after_url,
+                             'view_title': view_title
+                             })
 
         return informations
 
