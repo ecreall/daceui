@@ -97,6 +97,7 @@ class DaceUIAPI(object):
         resources['css_links'] = []
         allbodies_actions = []
         updated_view = None
+        valid_form_id = False
         for (context, action) in actions:
             #get view class
             view = DEFAULTMAPPING_ACTIONS_VIEWS[action._class_]
@@ -104,9 +105,11 @@ class DaceUIAPI(object):
             view_instance = view(context, request, 
                      behaviors=[action])
             view_result = {}
+            view_has_id = view_instance.has_id(form_id)
+            valid_form_id = valid_form_id or view_has_id
             #if the view instance is called then update the view
             if not action_updated and form_id and \
-               view_instance.has_id(form_id):
+               view_has_id:
                 action_updated = True
                 updated_view = view_instance
                 view_result = view_instance()
@@ -119,7 +122,7 @@ class DaceUIAPI(object):
             if updated_view is view_instance and \
                view_instance.isexecutable and \
                view_instance.finished_successfully:
-                return True, True, None, None
+                return True, True, True, None, None
 
             #if the view instance return a result
             if isinstance(view_result, dict):
@@ -139,14 +142,17 @@ class DaceUIAPI(object):
                         key=lambda call_action: call_action.action.behavior_id)
                     a_actions = [(action, call_action.action) \
                                  for call_action in actions_as]
-                    toreplay, action_updated_as, \
+                    toreplay, valid_form_id_as, action_updated_as, \
                     resources_as, allbodies_actions_as = self._modal_views(
                                               request, a_actions, form_id)
                     if toreplay:
-                        return True, True, None, None
+                        return True, True, True, None, None
 
                     if action_updated_as:
                         action_updated = True
+
+                    if valid_form_id_as:
+                        valid_form_id = True
 
                     resources['js_links'].extend(resources_as['js_links'])
                     resources['js_links'] = list(set(resources['js_links']))
@@ -184,10 +190,9 @@ class DaceUIAPI(object):
                     view_resources = merge_dicts(view_result, view_resources, 
                                         ('js_links', 'css_links'))
 
-                    return True, True, view_resources, [action_infos]
+                    return True, True, True, view_resources, [action_infos]
 
-
-        return False, action_updated, resources, allbodies_actions
+        return False, valid_form_id, action_updated, resources, allbodies_actions
 
     def update_actions(self, 
                  request,
@@ -202,7 +207,7 @@ class DaceUIAPI(object):
             #if request.POST['__formid__'].find(object_oid) >= 0:
             form_id = request.POST['__formid__']
 
-        toreplay, action_updated, \
+        toreplay, valid_form_id, action_updated, \
         resources, allbodies_actions = self._modal_views(
                                         request, all_actions,
                                         form_id, ignor_actionsofactions)
@@ -236,7 +241,7 @@ class DaceUIAPI(object):
             return True , messages, resources, allbodies_actions
 
         if form_id and \
-           not action_updated and all_actions:
+           not action_updated and valid_form_id and all_actions:
             error = ViewError()
             error.principalmessage = u"Action non realisee"
             error.causes = ["Vous n'avez plus le droit de realiser cette action.", 
@@ -390,7 +395,7 @@ class DaceUIAPI(object):
         dates = sorted(dates.items(), key=lambda i: i[0])
         return dates
 
-    def get_action_body(self, context, request, action, add_action_discriminator=False):
+    def get_action_body(self, context, request, action, add_action_discriminator=False, unwrap=True):
         body = ''
         if action is not None:
             view = DEFAULTMAPPING_ACTIONS_VIEWS[action._class_]
@@ -399,7 +404,9 @@ class DaceUIAPI(object):
                 action_oid = get_oid(action)
                 view_instance.viewid += str(action_oid)
 
-            view_instance.wrapper_template = 'daceui:templates/simple_view_wrapper.pt'
+            if unwrap:
+                view_instance.wrapper_template = 'daceui:templates/simple_view_wrapper.pt'
+
             view_result = view_instance()
             body = ''
             if isinstance(view_result, dict) and 'coordinates' in view_result:
