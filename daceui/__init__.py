@@ -1,5 +1,5 @@
-# Copyright (c) 2014 by Ecreall under licence AGPL terms 
-# avalaible on http://www.gnu.org/licenses/agpl.html 
+# Copyright (c) 2014 by Ecreall under licence AGPL terms
+# avalaible on http://www.gnu.org/licenses/agpl.html
 
 # licence: AGPL
 # author: Amen Souissi
@@ -22,9 +22,8 @@ def main(global_config, **settings):
     config.add_translation_dirs('deform:locale/')
     config.add_translation_dirs('colander:locale/')
     config.scan()
-    YEAR = 86400 * 365
     config.add_static_view(
-    	 'daceuistatic', 'daceui:static', cache_max_age=YEAR)
+            'daceuistatic', 'daceui:static', cache_max_age=86400)
     return config.make_wsgi_app()
 
 
@@ -34,11 +33,10 @@ def include(config): # pragma: no cover
 
 def scan(config): # pragma: no cover
     config.scan('.')
-    
+
 
 def includeme(config): # pragma: no cover
     config.include(include)
     config.include(scan)
-    YEAR = 86400 * 365
     config.add_static_view(
-         'daceuistatic', 'daceui:static', cache_max_age=YEAR)
+            'daceuistatic', 'daceui:static', cache_max_age=86400)
