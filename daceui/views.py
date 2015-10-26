@@ -91,7 +91,7 @@ class ProcessStatisticView(BasicView):
                                                  self.__class__.__name__)
         dates = dace_ui_api.statistic_dates(self, self.context.processes)
         values['dates'] = dates
-        body = self.content(result=values, template=self.template)['body']
+        body = self.content(args=values, template=self.template)['body']
         item = self.adapt_item(body, self.viewid)
         result['coordinates'] = {self.coordinates:[item]}
         result  = merge_dicts(self.requirements_copy, result)
@@ -136,7 +136,7 @@ class ProcessDefinitionContainerView(BasicView):
         allprocessesdef = [{'title':k, 'processes':v} \
                            for k, v in self._processes().items()]
         values = {'allprocessesdef': allprocessesdef}
-        body = self.content(result=values, template=self.template)['body']
+        body = self.content(args=values, template=self.template)['body']
         item = self.adapt_item(body, self.viewid)
         result['coordinates'] = {self.coordinates:[item]}
         result  = merge_dicts(self.requirements_copy, result)
@@ -171,7 +171,7 @@ class ProcessDefinitionStatisticView(BasicView):
         dates = dace_ui_api.statistic_dates(self, 
                     self.context.started_processes)
         values['dates'] = dates
-        body = self.content(result=values, template=self.template)['body']
+        body = self.content(args=values, template=self.template)['body']
         item = self.adapt_item(body, self.viewid)
         result['coordinates'] = {self.coordinates:[item]}
         result  = merge_dicts(self.requirements_copy, result)
@@ -194,7 +194,7 @@ class ProcessDefinitionView(BasicView):
         self.execute(None)
         result = {}
         values = {'processdef': self.context}
-        body = self.content(result=values, template=self.template)['body']
+        body = self.content(args=values, template=self.template)['body']
         item = self.adapt_item(body, self.viewid)
         result['coordinates'] = {self.coordinates:[item]}
         return result
@@ -239,7 +239,7 @@ class ProcessesPDDefinitionView(BasicView):
                   'pages': pages,
                   'url': self.request.resource_url(self.context, 
                                                    '@@ProcessInst')}
-        body = self.content(result=values, template=self.template)['body']
+        body = self.content(args=values, template=self.template)['body']
         item = self.adapt_item(body, self.viewid)
         result['coordinates'] = {self.coordinates:[item]}
         result  = merge_dicts(self.requirements_copy, result)
@@ -272,7 +272,7 @@ class ProcessView(BasicView):
         result = {}
         values = {'actions': actions, 
                   'definition':self.context.definition}
-        body = self.content(result=values, template=self.template)['body']
+        body = self.content(args=values, template=self.template)['body']
         item = self.adapt_item(body, self.viewid)
         item['messages'] = messages
         item['isactive'] = action_updated
@@ -299,7 +299,7 @@ class StatisticProcessView(BasicView):
         self.execute(None)
         result = {}
         values = {}
-        body = self.content(result=values, template=self.template)['body']
+        body = self.content(args=values, template=self.template)['body']
         item = self.adapt_item(body, self.viewid)
         result['coordinates'] = {self.coordinates:[item]}
         return result
@@ -355,7 +355,7 @@ class ProcessDataView(BasicView):
         values = {'datas': involveds, 
                   'alldatas':all_involveds, 
                   'tabid':self.__class__.__name__+'AllDatas'}
-        body = self.content(result=values, template=self.template)['body']
+        body = self.content(args=values, template=self.template)['body']
         item = self.adapt_item(body, self.viewid)
         result['coordinates'] = {self.coordinates:[item]}
         result  = merge_dicts(self.requirements_copy, result)
@@ -395,7 +395,7 @@ class DoActivitiesProcessView(BasicView):
         values = {'actions': actions,
                   'process':self.context,
                   'tabid':self.__class__.__name__+'AllActions'}
-        body = self.content(result=values, template=self.template)['body']
+        body = self.content(args=values, template=self.template)['body']
         item = self.adapt_item(body, self.viewid)
         item['messages'] = messages
         item['isactive'] = action_updated
@@ -462,7 +462,7 @@ class AssignedUsersView(BasicView):
         values = {
                 'users': users,
                }
-        body = self.content(result=values, template=self.template)['body']
+        body = self.content(args=values, template=self.template)['body']
         item = self.adapt_item(body, self.viewid)
         result['coordinates'] = {self.coordinates:[item]}
         return result

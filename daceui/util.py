@@ -347,7 +347,7 @@ class DaceUIAPI(object):
                   'page': page,
                   'pages': pages,
                   'url': view.request.resource_url(view.context, '@@'+view.name)}
-        body = view.content(result=values, template='daceui:templates/runtime_view.pt')['body']
+        body = view.content(args=values, template='daceui:templates/runtime_view.pt')['body']
         item = view.adapt_item(body, view.viewid)
         result['coordinates'] = {view.coordinates:[item]}
         result  = merge_dicts(view.requirements, result)
