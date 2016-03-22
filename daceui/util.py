@@ -132,7 +132,7 @@ class DaceUIAPI(object):
                 if updated_view is view_instance and \
                    (not view_instance.isexecutable or \
                     (view_instance.isexecutable and \
-                     not view_instance.finished_successfully)) :
+                     not view_instance.finished_successfully)):
                     action_infos['toreplay'] = True
                     if not view_instance.isexecutable:
                         action_infos['finished'] = True
