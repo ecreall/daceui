@@ -1,5 +1,6 @@
-# Copyright (c) 2014 by Ecreall under licence AGPL terms 
-# avalaible on http://www.gnu.org/licenses/agpl.html 
+# -*- coding: utf-8 -*-
+# Copyright (c) 2014 by Ecreall under licence AGPL terms
+# avalaible on http://www.gnu.org/licenses/agpl.html
 
 # licence: AGPL
 # author: Amen Souissi
@@ -61,7 +62,7 @@ class StatisticProcesses(InfiniteCardinality):
             actionuid = get_oid(self)
             query = {'action_uid': actionuid}
         except AttributeError:
-            query = {'isstart': 'True'} 
+            query = {'isstart': 'True'}
 
         query['coordinates'] = 'main'
         return get_current_request().resource_url(
@@ -86,19 +87,19 @@ class RuntimeProcessDefinition(ProcessDefinition, VisualisableElement):
     def __init__(self, **kwargs):
         super(RuntimeProcessDefinition, self).__init__(**kwargs)
         self.title = 'Processus de gestion du runtime'
-        self.description = 'Ce processus permet de gerer les processus de l\'application'
+        self.description = "Ce processus permet de gérer les processus de l'application"
 
     def _init_definition(self):
         self.defineNodes(
                 s = StartEventDefinition(),
                 pg = ParallelGatewayDefinition(),
-                processes_run = ActivityDefinition(contexts=[SeeProcesses], 
+                processes_run = ActivityDefinition(contexts=[SeeProcesses],
                                     title="Les processus en cours",
                                     groups=['Voir'],
-                                    description="L'action permet de voir les processus encours"),
+                                    description="L'action permet de voir les processus en cours"),
                 processes_stat = ActivityDefinition(contexts=[StatisticProcesses],
                                     title="Tableau de bord",
-                                    groups=['Voir','Statistique'],
+                                    groups=['Voir', 'Statistique'],
                                     description="L'action permet de voir les statistiques des processus en cours"),
                 eg = ExclusiveGatewayDefinition(),
                 e = EndEventDefinition(),
@@ -131,16 +132,16 @@ class PDCProcessDefinition(ProcessDefinition, VisualisableElement):
 
     def __init__(self, **kwargs):
         super(PDCProcessDefinition, self).__init__(**kwargs)
-        self.title = 'Processus de gestion du containeur des definitions des processus'
-        self.description = 'Ce processus permet de gerer le containeur des definition des processus de l\'application'
+        self.title = 'Processus de gestion du containeur des définitions des processus'
+        self.description = "Ce processus permet de gerer le containeur des définitions des processus de l'application"
 
     def _init_definition(self):
         self.defineNodes(
                 s = StartEventDefinition(),
                 processes_def = ActivityDefinition(contexts=[SeeProcessesDef],
-                                                   title="Les definitions des processus",
+                                                   title="Les définitions des processus",
                                                    groups=['Voir'],
-                                                   description="L'action permet de voir les definition des processus"),
+                                                   description="L'action permet de voir les définitions des processus"),
                 e = EndEventDefinition(),
         )
         self.defineTransitions(
@@ -174,8 +175,8 @@ class StatisticProcessesDef(InfiniteCardinality):
             actionuid = get_oid(self)
             query = {'action_uid': actionuid}
         except AttributeError:
-            query = {'isstart': 'True'} 
-  
+            query = {'isstart': 'True'}
+
         query['coordinates'] = 'main'
         return get_current_request().resource_url(
              obj, '@@'+self.view_name,  query=query)
@@ -197,17 +198,17 @@ class PDProcessDefinition(ProcessDefinition, VisualisableElement):
 
     def __init__(self, **kwargs):
         super(PDProcessDefinition, self).__init__(**kwargs)
-        self.title = 'Processus de gestion des definitions des processus'
-        self.description = 'Ce processus permet de gerer les definition des processus de l\'application'
+        self.title = 'Processus de gestion des définitions des processus'
+        self.description = "Ce processus permet de gérer les définitions des processus de l'application"
 
     def _init_definition(self):
         self.defineNodes(
                 s = StartEventDefinition(),
                 pg = ParallelGatewayDefinition(),
                 processes_def = ActivityDefinition(contexts=[SeeProcessDef],
-                                                   title="La definition de processus",
+                                                   title="La définition de processus",
                                                    groups=['Voir'],
-                                                   description="L'action permet de voir les details de la definition de processus"),
+                                                   description="L'action permet de voir les détails de la definition de processus"),
                 processes_stat = ActivityDefinition(contexts=[StatisticProcessesDef],
                                                    title="Tableau de bord",
                                                    groups=['Voir','Statistique'],
@@ -216,7 +217,7 @@ class PDProcessDefinition(ProcessDefinition, VisualisableElement):
                 processes_run = ActivityDefinition(contexts=[InstanceProcessesDef],
                                                    title="Les processus en cours",
                                                    groups=['Voir'],
-                                                   description="L'action permet de voir les details des processus en cours"),
+                                                   description="L'action permet de voir les détails des processus en cours"),
                 eg = ExclusiveGatewayDefinition(),
                 e = EndEventDefinition(),
         )
@@ -258,7 +259,7 @@ class StatisticProcess(InfiniteCardinality):
             actionuid = get_oid(self)
             query = {'action_uid':actionuid}
         except AttributeError:
-            query = {'isstart':'True'} 
+            query = {'isstart':'True'}
 
         query['coordinates'] = 'main'
         return get_current_request().resource_url(
@@ -292,7 +293,7 @@ class PProcessDefinition(ProcessDefinition, VisualisableElement):
     def __init__(self, **kwargs):
         super(PProcessDefinition, self).__init__(**kwargs)
         self.title = 'Processus de gestion des processus'
-        self.description = 'Ce processus permet de gerer les processus de l\'application'
+        self.description = "Ce processus permet de gérer les processus de l'application"
 
     def _init_definition(self):
         self.defineNodes(
@@ -301,19 +302,19 @@ class PProcessDefinition(ProcessDefinition, VisualisableElement):
                 processes_def = ActivityDefinition(contexts=[SeeProcess],
                                                    title="Details",
                                                    groups=['Voir'],
-                                                   description="L'action permet de voir les details du processus"),
+                                                   description="L'action permet de voir les détails du processus"),
                 processes_stat = ActivityDefinition(contexts=[StatisticProcess],
                                                    title="Tableau de bord",
-                                                   groups=['Voir','Statistique'],
+                                                   groups=['Voir', 'Statistique'],
                                                    description="L'action permet de voir les statistiques du processus en cours"),
                 processes_datas = ActivityDefinition(contexts=[SeeProcessDatas],
-                                                   title="Les donnees manipulees",
+                                                   title="Les données manipulées",
                                                    groups=['Voir'],
-                                                   description="L'action permet de voir les donnees manipulees par le processus"),
+                                                   description="L'action permet de voir les donnees manipulées par le processus"),
                 processes_actions = ActivityDefinition(contexts=[DoActivitiesProcess],
                                                    title="Les actions a realiser",
                                                    groups=[],
-                                                   description="L'action permet de realiser les actions en relation avec le processus"),
+                                                   description="L'action permet de réaliser les actions en relation avec le processus"),
                 eg = ExclusiveGatewayDefinition(),
                 e = EndEventDefinition(),
         )
@@ -366,21 +367,21 @@ class ActivityProcessDefinition(ProcessDefinition, VisualisableElement):
 
     def __init__(self, **kwargs):
         super(ActivityProcessDefinition, self).__init__(**kwargs)
-        self.title = 'Processus de gestion des activitees d\'un processus'
-        self.description = 'Ce processus permet de gerer les activitees d\'un processus'
+        self.title = "Processus de gestion des activitées d'un processus"
+        self.description = "Ce processus permet de gérer les activités d'un processus"
 
     def _init_definition(self):
         self.defineNodes(
                 s = StartEventDefinition(),
                 pg = ParallelGatewayDefinition(),
                 activity_ass = ActivityDefinition(contexts=[AssignToUsers],
-                                                   title="Assigner l'activitee",
+                                                   title="Assigner l'activité",
                                                    groups=['Administration'],
-                                                   description="L'action permet d\' assigner l'activitee a des utlisateurs"),
+                                                   description="L'action permet d'assigner l'activité à des utlisateurs"),
                 action_ass = ActivityDefinition(contexts=[AssignActionToUsers],
                                                    title="Assigner l'action",
                                                    groups=['Administration'],
-                                                   description="L'action permet d\' assigner l'action a des utlisateurs"),
+                                                   description="L'action permet d'assigner l'action à des utlisateurs"),
                 eg = ExclusiveGatewayDefinition(),
                 e = EndEventDefinition(),
         )
