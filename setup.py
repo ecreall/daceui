@@ -9,8 +9,8 @@ with open(os.path.join(here, 'CHANGES.rst')) as f:
     CHANGES = f.read()
 
 requires = [
-    'dace',
-    'pontus',
+    'ecreall_dace',
+    'ecreall_pontus',
     'pyramid',
     'pyramid_chameleon',
     'pyramid_debugtoolbar',
@@ -19,12 +19,13 @@ requires = [
     'waitress',
     ]
 
-setup(name='daceui',
-      version='0.0',
+setup(name='ecreall_daceui',
+      version='1.0.dev0',
       description='daceui',
       long_description=README + '\n\n' + CHANGES,
       classifiers=[
         "Programming Language :: Python",
+        "Programming Language :: Python :: 3.4",
         "Framework :: Pyramid",
         "Topic :: Internet :: WWW/HTTP",
         "Topic :: Internet :: WWW/HTTP :: WSGI :: Application",
@@ -32,7 +33,7 @@ setup(name='daceui',
       author='',
       author_email='',
       url='',
-      keywords='web pyramid pylons',
+      keywords='',
       packages=find_packages(),
       include_package_data=True,
       zip_safe=False,
