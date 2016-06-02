@@ -80,7 +80,7 @@ class DaceUIAPI(object):
                 actions = [action for action in actions \
                            if action.process is process]
 
-            actions = sorted(actions, key=lambda action: action.node_id)
+            # actions = sorted(actions, key=lambda action: action.node_id)
             p_actions = [(context, a) for a in actions]
             all_actions.extend(p_actions)
 
@@ -159,7 +159,6 @@ class DaceUIAPI(object):
                     resources['css_links'].extend(resources_as['css_links'])
                     resources['css_links'] = list(set(resources['css_links']))
                     action_infos['actions'] = allbodies_actions_as
-
 
                 body = ''
                 if 'coordinates' in view_result:
