@@ -55,11 +55,11 @@ def calculatePage(elements, view, tabid):
 @implementer(IDaceUIAPI)
 class DaceUIAPI(object):
 
-    def get_actions(self, 
+    def get_actions(self,
                     contexts,
                     request,
                     process_or_id=None,
-                    action_id=None, 
+                    action_id=None,
                     process_discriminator=None,
                     isautomatic=False):
         all_actions = []
@@ -71,13 +71,14 @@ class DaceUIAPI(object):
             process = process_or_id
 
         for context in contexts:
-            actions = getAllBusinessAction(context, request, 
-                         isautomatic=isautomatic,
-                         process_id=process_id, 
-                         node_id=action_id,
-                         process_discriminator=process_discriminator)
+            actions = getAllBusinessAction(
+                context, request,
+                isautomatic=isautomatic,
+                process_id=process_id,
+                node_id=action_id,
+                process_discriminator=process_discriminator)
             if process:
-                actions = [action for action in actions \
+                actions = [action for action in actions
                            if action.process is process]
 
             # actions = sorted(actions, key=lambda action: action.node_id)
@@ -86,9 +87,9 @@ class DaceUIAPI(object):
 
         return all_actions
 
-    def _modal_views(self, 
-                     request, 
-                     actions, 
+    def _modal_views(self,
+                     request,
+                     actions,
                      form_id,
                      ignor_actionsofactions=True):
         action_updated = False
@@ -102,8 +103,9 @@ class DaceUIAPI(object):
             #get view class
             view = DEFAULTMAPPING_ACTIONS_VIEWS[action._class_]
             #get view instance
-            view_instance = view(context, request, 
-                     behaviors=[action])
+            view_instance = view(
+                context, request,
+                behaviors=[action])
             view_result = {}
             view_has_id = view_instance.has_id(form_id)
             valid_form_id = valid_form_id or view_has_id
@@ -116,7 +118,7 @@ class DaceUIAPI(object):
             else:
                 #else get view requirements
                 view_result = view_instance.get_view_requirements()
-            
+
             #if the view instance is executable and it is executable
             #and finished successfully return
             if updated_view is view_instance and \
@@ -127,7 +129,7 @@ class DaceUIAPI(object):
             #if the view instance return a result
             if isinstance(view_result, dict):
                 action_infos = {}
-                #if the view instance is not executable or 
+                #if the view instance is not executable or
                 #it is finished with an error
                 if updated_view is view_instance and \
                    (not view_instance.isexecutable or \
@@ -138,13 +140,14 @@ class DaceUIAPI(object):
                         action_infos['finished'] = True
 
                 if not ignor_actionsofactions:
-                    actions_as = sorted(action.actions, 
+                    actions_as = sorted(
+                        action.actions,
                         key=lambda call_action: call_action.action.behavior_id)
-                    a_actions = [(action, call_action.action) \
+                    a_actions = [(action, call_action.action)
                                  for call_action in actions_as]
                     toreplay, valid_form_id_as, action_updated_as, \
-                    resources_as, allbodies_actions_as = self._modal_views(
-                                              request, a_actions, form_id)
+                        resources_as, allbodies_actions_as = self._modal_views(
+                            request, a_actions, form_id)
                     if toreplay:
                         return True, True, True, None, None
 
@@ -163,21 +166,22 @@ class DaceUIAPI(object):
                 body = ''
                 if 'coordinates' in view_result:
                     body = view_instance.render_item(
-                     view_result['coordinates'][view_instance.coordinates][0], 
-                     view_instance.coordinates, None)
+                        view_result['coordinates'][view_instance.coordinates][0],
+                        view_instance.coordinates, None)
 
                 action_infos.update(
-                        self.action_infomrations(action=action, 
-                                                 context=context, 
-                                                 request=request))
+                    self.action_infomrations(action=action,
+                                             context=context,
+                                             request=request))
                 action_infos.update({
-                        'body':body,
-                        'context': context,
-                        'assigned_to': sorted(action.assigned_to, 
-                                            key=lambda u: getattr(u, 'title', 
-                                                                u.__name__))})
+                    'body': body,
+                    'context': context,
+                    'assigned_to': sorted(
+                        action.assigned_to,
+                        key=lambda u: getattr(
+                            u, 'title', u.__name__))})
                 allbodies_actions.append(action_infos)
-                resources = merge_dicts(view_result, resources, 
+                resources = merge_dicts(view_result, resources,
                                         ('js_links', 'css_links'))
                 resources['js_links'] = list(set(resources['js_links']))
                 resources['css_links'] = list(set(resources['css_links']))
@@ -186,18 +190,21 @@ class DaceUIAPI(object):
                     view_resources = {}
                     view_resources['js_links'] = []
                     view_resources['css_links'] = []
-                    view_resources = merge_dicts(view_result, view_resources, 
-                                        ('js_links', 'css_links'))
+                    view_resources = merge_dicts(
+                        view_result, view_resources,
+                        ('js_links', 'css_links'))
 
                     return True, True, True, view_resources, [action_infos]
 
-        return False, valid_form_id, action_updated, resources, allbodies_actions
+        return False, valid_form_id, action_updated, \
+            resources, allbodies_actions
 
-    def update_actions(self, 
-                 request,
-                 all_actions,
-                 ignor_form=False,
-                 ignor_actionsofactions=True):
+    def update_actions(
+        self,
+        request,
+        all_actions,
+        ignor_form=False,
+        ignor_actionsofactions=True):
         messages = {}
         #find all business actions
         form_id = None
@@ -207,9 +214,9 @@ class DaceUIAPI(object):
             form_id = request.POST['__formid__']
 
         toreplay, valid_form_id, action_updated, \
-        resources, allbodies_actions = self._modal_views(
-                                        request, all_actions,
-                                        form_id, ignor_actionsofactions)
+            resources, allbodies_actions = self._modal_views(
+                request, all_actions,
+                form_id, ignor_actionsofactions)
         if toreplay:
             request.POST.clear()
             old_resources = resources
@@ -225,11 +232,10 @@ class DaceUIAPI(object):
                     pass
 
             action_updated, messages, \
-            resources, allbodies_actions = self.update_actions(request, 
-                                                         actions_toreplay,
-                                                         ignor_form)
+                resources, allbodies_actions = self.update_actions(
+                    request, actions_toreplay, ignor_form)
             if old_resources is not None:
-                resources = merge_dicts(old_resources, resources, 
+                resources = merge_dicts(old_resources, resources,
                                         ('js_links', 'css_links'))
                 resources['js_links'] = list(set(resources['js_links']))
                 resources['css_links'] = list(set(resources['css_links']))
@@ -237,13 +243,13 @@ class DaceUIAPI(object):
             if old_allbodies_actions is not None:
                 allbodies_actions.extend(old_allbodies_actions)
 
-            return True , messages, resources, allbodies_actions
+            return True, messages, resources, allbodies_actions
 
         if form_id and \
            not action_updated and valid_form_id and all_actions:
             error = ViewError()
             error.principalmessage = u"Action non realisee"
-            error.causes = ["Vous n'avez plus le droit de realiser cette action.", 
+            error.causes = ["Vous n'avez plus le droit de realiser cette action.",
                             "L'action est verrouillee par un autre utilisateur."]
             message = error.render_message(request)
             messages.update({error.type: [message]})
@@ -264,31 +270,37 @@ class DaceUIAPI(object):
         except Exception:
             pass
 
-        action_id= action_id+str(action_oid)+'_'+str(context_oid)
-        after_url = self.afterexecution_viewurl(request=request, 
-                                                action_uid=str(action_oid), 
-                                                context_uid=str(context_oid))
-        actionurl_update = self.updateaction_viewurl(request=request, 
-                                                action_uid=str(action_oid), 
-                                                context_uid=str(context_oid))
+        action_id = action_id + str(action_oid) + '_' + str(context_oid)
         if action_oid == 'start':
-            after_url = self.afterexecution_viewurl(request=request,
-                                                isstart=True,
-                                                context_uid=str(context_oid),
-                                                pd_id=action.node.process.id,
-                                                action_id=action.node.__name__,
-                                                behavior_id=action.behavior_id)
-            actionurl_update = self.updateaction_viewurl(request=request,
-                                                isstart=True,
-                                                context_uid=str(context_oid),
-                                                pd_id=action.node.process.id,
-                                                action_id=action.node.__name__,
-                                                behavior_id=action.behavior_id)
+            after_url = self.afterexecution_viewurl(
+                request=request,
+                isstart=True,
+                context_uid=str(context_oid),
+                pd_id=action.node.process.id,
+                action_id=action.node.__name__,
+                behavior_id=action.behavior_id)
+            actionurl_update = self.updateaction_viewurl(
+                request=request,
+                isstart=True,
+                context_uid=str(context_oid),
+                pd_id=action.node.process.id,
+                action_id=action.node.__name__,
+                behavior_id=action.behavior_id)
+        else:
+            after_url = self.afterexecution_viewurl(
+                request=request,
+                action_uid=str(action_oid),
+                context_uid=str(context_oid))
+            actionurl_update = self.updateaction_viewurl(
+                request=request,
+                action_uid=str(action_oid),
+                context_uid=str(context_oid))
+
         informations = {}
-        informations.update({'action':action,
-                             'action_id':action_id,
+        informations.update({'action': action,
+                             'action_id': action_id,
                              'actionurl_update': actionurl_update,
-                             'actionurl_after':after_url,
+                             'actionurl_after': after_url,
                              'view_title': view_title
                              })
 
@@ -299,18 +311,18 @@ class DaceUIAPI(object):
             request = get_current_request()
 
         args['op'] = 'after_execution_action'
-        return request.resource_url(request.context, 
-                                   '@@dace-ui-api-view', 
-                                   query=args)
+        return request.resource_url(
+            request.context, '@@dace-ui-api-view',
+            query=args)
 
     def updateaction_viewurl(self, request=None, **args):
         if request is None:
             request = get_current_request()
 
         args['op'] = 'update_action'
-        return request.resource_url(request.context, 
-                                    '@@dace-ui-api-view', 
-                                    query=args)
+        return request.resource_url(
+            request.context, '@@dace-ui-api-view', 
+            query=args)
 
     def _processes(self, view, processes):
         allprocesses = []
