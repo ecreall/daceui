@@ -1,7 +1,7 @@
-daceui Changelog
-==================
+Changelog
+=========
 
-1.0
----
+1.0 (2016-06-28)
+----------------
 
--  Initial version
+- Initial version
