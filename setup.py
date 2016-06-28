@@ -21,7 +21,7 @@ requires = [
 
 setup(name='ecreall_daceui',
       version='1.0.dev0',
-      description='daceui',
+      description='This the reusable ui parts for DaCE.',
       long_description=README + '\n\n' + CHANGES,
       classifiers=[
         "Programming Language :: Python",
