@@ -1,2 +1,11 @@
 include *.txt *.ini *.cfg *.rst
 recursive-include daceui *.ico *.png *.css *.gif *.jpg *.pt *.txt *.mak *.mako *.js *.html *.xml
+include *.py
+include LICENSE
+recursive-include daceui *.json
+recursive-include daceui *.less
+recursive-include daceui *.md
+recursive-include daceui *.psd
+recursive-include daceui *.sh
+recursive-include daceui *.tab
+recursive-include daceui Makefile
