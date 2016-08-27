@@ -5,6 +5,7 @@
 # author: Amen Souissi
 import datetime
 from math import ceil
+import json
 from zope.interface import implementer
 
 from pyramid.threadlocal import get_current_request, get_current_registry
@@ -87,7 +88,7 @@ class DaceUIAPI(object):
 
         return all_actions
 
-    def _modal_views(self,
+    def _ajax_views(self,
                      request,
                      actions,
                      form_id,
@@ -146,7 +147,7 @@ class DaceUIAPI(object):
                     a_actions = [(action, call_action.action)
                                  for call_action in actions_as]
                     toreplay, valid_form_id_as, action_updated_as, \
-                        resources_as, allbodies_actions_as = self._modal_views(
+                        resources_as, allbodies_actions_as = self._ajax_views(
                             request, a_actions, form_id)
                     if toreplay:
                         return True, True, True, None, None
@@ -174,7 +175,7 @@ class DaceUIAPI(object):
                                              context=context,
                                              request=request))
                 action_infos.update({
-                    'body': body,
+                    'body': json.dumps(body),
                     'context': context,
                     'assigned_to': sorted(
                         action.assigned_to,
@@ -214,7 +215,7 @@ class DaceUIAPI(object):
             form_id = request.POST['__formid__']
 
         toreplay, valid_form_id, action_updated, \
-            resources, allbodies_actions = self._modal_views(
+            resources, allbodies_actions = self._ajax_views(
                 request, all_actions,
                 form_id, ignor_actionsofactions)
         if toreplay:
@@ -311,8 +312,9 @@ class DaceUIAPI(object):
             request = get_current_request()
 
         args['op'] = 'after_execution_action'
+        ajax_api = getattr(request, 'ajax_api', '@@dace-ui-api-view') 
         return request.resource_url(
-            request.context, '@@dace-ui-api-view',
+            request.context, ajax_api,
             query=args)
 
     def updateaction_viewurl(self, request=None, **args):
@@ -320,8 +322,9 @@ class DaceUIAPI(object):
             request = get_current_request()
 
         args['op'] = 'update_action'
+        ajax_api = getattr(request, 'ajax_api', '@@dace-ui-api-view') 
         return request.resource_url(
-            request.context, '@@dace-ui-api-view', 
+            request.context, ajax_api, 
             query=args)
 
     def _processes(self, view, processes):
