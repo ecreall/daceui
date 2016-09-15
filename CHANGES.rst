@@ -4,7 +4,7 @@ Changelog
 1.1 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Fix dace ui api.
 
 
 1.0.1 (2016-08-18)
