@@ -92,7 +92,8 @@ class DaceUIAPI(object):
                      request,
                      actions,
                      form_id,
-                     ignor_actionsofactions=True):
+                     ignor_actionsofactions=True,
+                     include_resources=True):
         action_updated = False
         resources = {}
         resources['js_links'] = []
@@ -118,7 +119,9 @@ class DaceUIAPI(object):
                 view_result = view_instance()
             else:
                 #else get view requirements
-                view_result = view_instance.get_view_requirements()
+                view_result = {'js_links': [], 'css_links': []}
+                if include_resources:
+                    view_result = view_instance.get_view_requirements()
 
             #if the view instance is executable and it is executable
             #and finished successfully return
@@ -148,7 +151,7 @@ class DaceUIAPI(object):
                                  for call_action in actions_as]
                     toreplay, valid_form_id_as, action_updated_as, \
                         resources_as, allbodies_actions_as = self._ajax_views(
-                            request, a_actions, form_id)
+                            request, a_actions, form_id, include_resources)
                     if toreplay:
                         return True, True, True, None, None
 
@@ -205,7 +208,8 @@ class DaceUIAPI(object):
         request,
         all_actions,
         ignor_form=False,
-        ignor_actionsofactions=True):
+        ignor_actionsofactions=True,
+        include_resources=True):
         messages = {}
         #find all business actions
         form_id = None
@@ -217,7 +221,8 @@ class DaceUIAPI(object):
         toreplay, valid_form_id, action_updated, \
             resources, allbodies_actions = self._ajax_views(
                 request, all_actions,
-                form_id, ignor_actionsofactions)
+                form_id, ignor_actionsofactions,
+                include_resources)
         if toreplay:
             request.POST.clear()
             old_resources = resources
@@ -234,7 +239,8 @@ class DaceUIAPI(object):
 
             action_updated, messages, \
                 resources, allbodies_actions = self.update_actions(
-                    request, actions_toreplay, ignor_form)
+                    request, actions_toreplay, ignor_form,
+                    include_resources=include_resources)
             if old_resources is not None:
                 resources = merge_dicts(old_resources, resources,
                                         ('js_links', 'css_links'))
@@ -354,17 +360,17 @@ class DaceUIAPI(object):
         page, pages, processes = calculatePage(processes, view, tabid)
         nb_encours, nb_bloque, nb_termine, allprocesses = self._processes(view, processes)
         values = {'processes': allprocesses,
-                  'encours':nb_encours,
-                  'bloque':nb_bloque,
-                  'termine':nb_termine,
-                  'tabid':tabid,
+                  'encours': nb_encours,
+                  'bloque': nb_bloque,
+                  'termine': nb_termine,
+                  'tabid': tabid,
                   'page': page,
                   'pages': pages,
                   'url': view.request.resource_url(view.context, '@@'+view.name)}
         body = view.content(args=values, template='daceui:templates/runtime_view.pt')['body']
         item = view.adapt_item(body, view.viewid)
         result['coordinates'] = {view.coordinates:[item]}
-        result  = merge_dicts(view.requirements, result)
+        result = merge_dicts(view.requirements, result)
         return result
 
     def statistic_processes(self, view, processes, tabid):
@@ -416,8 +422,15 @@ class DaceUIAPI(object):
         dates = sorted(dates.items(), key=lambda i: i[0])
         return dates
 
-    def get_action_body(self, context, request, action, add_action_discriminator=False, unwrap=True):
+    def get_action_body(
+        self, context, request, action,
+        add_action_discriminator=False, unwrap=True,
+        include_resources=False):
         body = ''
+        resources = {
+            'css_links': [],
+            'js_links': []
+        }
         if action is not None:
             view = DEFAULTMAPPING_ACTIONS_VIEWS[action._class_]
             view_instance = view(context, request, behaviors=[action])
@@ -431,8 +444,12 @@ class DaceUIAPI(object):
             view_result = view_instance()
             body = ''
             if isinstance(view_result, dict) and 'coordinates' in view_result:
+                resources['css_links'] = view_result.get('css_links', [])
+                resources['js_links'] = view_result.get('js_links', [])
                 body = view_instance.render_item(view_result['coordinates'][view_instance.coordinates][0], 
                                                  view_instance.coordinates, None)
+        if include_resources:
+            return body, resources
 
         return body
 
