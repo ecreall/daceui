@@ -20,7 +20,7 @@ requires = [
     ]
 
 setup(name='ecreall_daceui',
-      version='1.0.3',
+      version='1.0.4.dev0',
       description='This the reusable ui parts for DaCE.',
       long_description=README + '\n\n' + CHANGES,
       classifiers=[
