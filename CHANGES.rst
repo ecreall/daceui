@@ -1,10 +1,10 @@
 Changelog
 =========
 
-1.0.3 (unreleased)
+1.0.3 (2017-01-06)
 ------------------
 
-- Nothing changed yet.
+- Add include_resources parameter to the different view methods.
 
 
 1.0.2 (2016-09-15)
