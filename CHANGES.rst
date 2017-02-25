@@ -1,10 +1,10 @@
 Changelog
 =========
 
-1.0.4 (unreleased)
+1.0.4 (2017-02-25)
 ------------------
 
-- Nothing changed yet.
+- Fix in the jquery.infinitescroll.js file to trigger the event locally.
 
 
 1.0.3 (2017-01-06)
