@@ -123,7 +123,7 @@ class DaceUIAPI(object):
                 if include_resources:
                     view_result = view_instance.get_view_requirements()
 
-            #if the view instance is executable and it is executable
+            #if the view instance is executable
             #and finished successfully return
             if updated_view is view_instance and \
                view_instance.isexecutable and \
