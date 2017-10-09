@@ -1,4 +1,4 @@
-<div class="panel panel-default" >
+<div class="panel panel-default ${getattr(subitem['view'], 'css_class', '')}" >
    <div class="panel-heading"><div class="panel-title">${subitem['view'].title}</div></div>
        <div class="panel-body">
           <div tal:omit-tag="" tal:define=" items subitem['items'];
